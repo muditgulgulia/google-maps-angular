@@ -13,6 +13,7 @@ type Components = typeof place.address_components;
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
+
 export class AppComponent implements OnInit, AfterViewInit {
   @ViewChild('search')
   public searchElementRef!: NgSelectComponent;
@@ -32,7 +33,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     });
   }
 
-  async ngOnInit() {}
+  async ngOnInit() { }
 
   ngAfterViewInit(): void {
     const searchInput = this.searchElementRef.searchInput;
@@ -40,55 +41,66 @@ export class AppComponent implements OnInit, AfterViewInit {
     fromEvent(searchInput.nativeElement, 'input')
       .pipe(map((event: Event) => (event.target as HTMLInputElement).value))
       .pipe(
-        scan((i) => ++i, 1),
+        scan((i: number) => ++i, 1),
         debounce((i: number) => interval(50 * i))
       )
       .pipe(distinctUntilChanged())
-      .subscribe((_) => this.places(searchInput.nativeElement));
+      .subscribe((_: any) => this.places(searchInput.nativeElement.value));
   }
 
   async places(query: any) {
-    const result = await this.provider.search({
-      query,
-    });
+    if (query && !this.searchLoading) {
+      if (query.replace(/\s+/g, '').length > 2) {
+        this.searchLoading = true
+        const result = await this.provider.search({
+          query,
+        });
 
-    const address = await this.provider.geocoder?.geocode({
-      location: {
-        lat: result[0].raw.geometry.location.lat(),
-        lng: result[0].raw.geometry.location.lng(),
-      },
-    });
+        for (var z = 0; z < result.length; z++) {
+          const address = await this.provider.geocoder?.geocode({
+            location: {
+              lat: result[z].raw.geometry.location.lat(),
+              lng: result[z].raw.geometry.location.lng()
+            },
+          });
 
-    if (address) {
-      const results = address.results;
-      for (var i = 0; i < results.length; i++) {
-        const locality = getLong(results[i].address_components, 'locality');
-        const city = getLong(
-          results[i].address_components,
-          'administrative_area_level_2'
-        );
-        const state = getShort(
-          results[i].address_components,
-          'administrative_area_level_1'
-        );
-        const postalcode = getShort(
-          results[i].address_components,
-          'postal_code'
-        );
+          if (address) {
+            const results = address.results;
+            for (var i = 0; i < results.length; i++) {
+              const locality = getLong(results[i].address_components, 'locality');
+              const city = getLong(
+                results[i].address_components,
+                'administrative_area_level_2'
+              );
+              const state = getShort(
+                results[i].address_components,
+                'administrative_area_level_1'
+              );
+              const postalcode = getShort(
+                results[i].address_components,
+                'postal_code'
+              );
 
-        if (postalcode) {
-          const newItem = `${[locality || city || state, state].join(
-            ', '
-          )} - ${postalcode}`;
-          this.locations.indexOf(newItem) === -1
-            ? this.locations.push(newItem)
-            : null;
+              if (postalcode) {
+                const newItem = `${[locality || city || state, state].join(
+                  ', '
+                )} - ${postalcode}`;
+                this.locations.indexOf(newItem) === -1
+                  ? this.locations.push(newItem)
+                  : null;
+              }
+            }
+          }
         }
+
+        this.searchLoading = false
       }
     }
   }
 
-  updateFromCity(event: string) {}
+  updateFromCity(event: string) {
+    console.log(event);
+  }
 }
 
 function getComponent(components: Components, name: string) {
