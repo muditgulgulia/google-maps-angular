@@ -5,12 +5,7 @@
     "outDir": "./out-tsc/spec",
     "types": ["jasmine", "node", "google.maps"]
   },
-  "files": [
-    "src/test.ts",
-    "src/polyfills.ts"
-  ],
-  "include": [
-    "src/**/*.spec.ts",
-    "src/**/*.d.ts"
-  ]
+  "files": ["src/test.ts", "src/polyfills.ts"],
+  "include": ["src/**/*.spec.ts", "src/**/*.d.ts"]
 }
+https://typescript-lfji3b.stackblitz.io
