@@ -1,1 +1,17 @@
-<h1>Hello World</h1>
+<ng-select
+  #search
+  [searchable]="true"
+  [clearable]="true"
+  [(ngModel)]="selectedFromLocation"
+  (change)="updateFromCity($event)"
+  [ngModelOptions]="{ standalone: true }"
+  [disabled]="disabled"
+  [loading]="searchLoading"
+  [minTermLength]="3"
+  [typeToSearchText]="'Enter 3 keyword to seach'"
+  placeholder="Enter 3 keyword to seach"
+>
+  <ng-option [value]="item" *ngFor="let item of locations">
+    {{ item }}
+  </ng-option>
+</ng-select>
