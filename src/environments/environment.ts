@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  GOOGLE_MAP_API_KEY:'AIzaSyCeqsEqPjwELsLbV_RgDx89qRIVh8ztcfE'
+  GOOGLE_MAP_API_KEY:'AIzaSyCeqsEqPjwELsLbV_RgDx89qRIVh8ztcfE',
+  apiUrl: 'https://z9v9gn4r3j.execute-api.us-east-1.amazonaws.com/beta',
 };
 
 /*
