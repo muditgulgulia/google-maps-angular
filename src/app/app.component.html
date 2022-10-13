@@ -2,10 +2,8 @@
   #search
   [searchable]="true"
   [clearable]="true"
-  [(ngModel)]="selectedFromLocation"
   (change)="updateFromCity($event)"
-  [ngModelOptions]="{ standalone: true }"
-  [disabled]="disabled"
+  [attr.disabled]="disabled"
   [loading]="searchLoading"
   [minTermLength]="3"
   [typeToSearchText]="'Enter 3 keyword to seach'"
